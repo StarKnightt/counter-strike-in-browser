@@ -1,0 +1,36 @@
+# dependencies / build
+node_modules/
+dist/
+.vite/
+
+# Blender scratch + backups
+_tmp_blender/
+tools/_tmp_*
+*.blend1
+
+# Poly Haven texture cache (~130 MB, regenerable: python tools/fetch_textures.py && python tools/grade_textures.py)
+tools/texcache/
+
+# source map export (85 MB, over GitHub's recommended limit; regenerable from tools/build_map.py in Blender)
+assets_src/dust2_a.glb
+
+# review output (screenshots, recorded rounds)
+shots/
+*.mp4
+*.webm
+
+# CS2 reference screenshots / web images used for visual comparison -- never published
+_ref/
+
+# secrets / local
+.env
+.env.*
+*.local
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.idea/
+.vscode/

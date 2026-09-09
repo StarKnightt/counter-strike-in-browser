@@ -1,0 +1,36 @@
+// Audio smoke test: bank loads, events produce voices, master has signal.
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'] });
+const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+const errors = []; page.on('pageerror', (e) => errors.push(e.message)); page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(m.text()); });
+await page.goto('http://localhost:5188/');
+await page.waitForFunction(() => window.__game && window.__game.sfx, null, { timeout: 90000 });
+const info = await page.evaluate(async () => {
+  const g = window.__game, a = g.audio;
+  await a.ctx.resume();
+  const bank = {}; for (const [k, v] of a.buffers) bank[k] = v.length;
+  const an = a.ctx.createAnalyser(); an.fftSize = 2048; a.master.connect(an);
+  const buf = new Float32Array(an.fftSize);
+  const rms = () => { an.getFloatTimeDomainData(buf); let s = 0; for (const x of buf) s += x * x; return Math.sqrt(s / buf.length); };
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const out = { state: a.ctx.state, bank, samples: {} };
+  g.mode = 'play'; Object.defineProperty(g.input, 'locked', { get: () => true }); g.round.skipFreeze();
+  await wait(300); out.samples.ambient = rms();
+  g.bus.emit(g.Events.WEAPON_FIRE, { weapon: 'ak47', shooter: 'player', origin: g.player.position.clone(), muzzle: g.player.position.clone(), dir: g.player.getForward() }); await wait(60); out.samples.ak = rms(); out.voicesAfterAk = a.voices;
+  await wait(900);
+  const V = g.player.position.constructor;
+  g.bus.emit(g.Events.HIT, { hit: { surface: 'concrete', point: g.player.position.clone().add(new V(0, 1, -6)), normal: new V(0, 0, 1), distance: 6 }, dir: new V(0, 0, -1), weapon: 'ak47', def: g.weapons.def, shooter: 'player' }); await wait(40); out.samples.impact = rms();
+  await wait(700);
+  g.bus.emit(g.Events.PLAYER_FOOTSTEP, { surface: 'sand', kind: 'step' }); await wait(40); out.samples.step = rms();
+  await wait(500);
+  g.bus.emit(g.Events.SOUND, { id: 'c4_beep', pos: g.player.position.clone() }); await wait(30); out.samples.beep = rms();
+  await wait(400);
+  g.bus.emit(g.Events.SOUND, { name: 'ak47_fire_distant', pos: g.bots.bots[0].position.clone() }); await wait(60); out.samples.botfire = rms(); out.botDist = g.bots.bots[0].position.distanceTo(g.player.position).toFixed(1);
+  await wait(800);
+  g.bus.emit(g.Events.SOUND, { id: 'c4_explode', pos: g.player.position.clone(), dist: 5 }); await wait(120); out.samples.explode = rms();
+  await wait(500); out.voices = a.voices;
+  return out;
+});
+console.log(JSON.stringify(info, null, 1));
+console.log('errors', errors.filter((e) => !/MeshBVH|PCFSoft/.test(e)));
+await browser.close();

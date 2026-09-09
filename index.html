@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dust2 A — Browser FPS</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/src/ui/hud.css" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="hud"></div>
+  <div id="scope" class="hidden">
+    <div class="lens"></div>
+    <!-- reticle: mil hashes on the cross (the cross itself is #scope::before/::after) + centre dot -->
+    <svg class="ret" viewBox="0 0 1000 1000" aria-hidden="true">
+      <g stroke="#000" stroke-width="1.5">
+        <path vector-effect="non-scaling-stroke" d="M450 493v14M400 494v12M350 493v14M300 494v12M250 493v14M200 494v12M150 493v14M550 493v14M600 494v12M650 493v14M700 494v12M750 493v14M800 494v12M850 493v14"/>
+        <path vector-effect="non-scaling-stroke" d="M493 450h14M494 400h12M493 350h14M494 300h12M493 250h14M494 200h12M493 150h14M493 550h14M494 600h12M493 650h14M494 700h12M493 750h14M494 800h12M493 850h14"/>
+      </g>
+      <circle cx="500" cy="500" r="2.2" fill="#000"/>
+    </svg>
+  </div>
+  <div id="overlay">
+    <button id="start">
+      <span class="map">Dust II <span>A site</span> · Counter-Terrorist · Defend A</span>
+      <span class="cta">CLICK TO PLAY</span>
+      <span class="hint">WASD move · Shift crouch · Ctrl walk · Space jump · 1/2/3 weapons · RMB aim · R reload · E defuse</span>
+    </button>
+    <p id="loading">loading map…</p>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

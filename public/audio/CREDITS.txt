@@ -1,0 +1,36 @@
+ak_b.mp3  <- freesound.org/s/520934/  (Freesound - ak 47 - single shot.mp3 by ninebilly)  CC0
+ak_c.mp3  <- freesound.org/s/855654/  (Freesound - An automatic rifle being shot once // punchy sounding by serøutōnin--deprivəd)  CC0
+awp_a.mp3  <- freesound.org/s/816114/  (Freesound - FPS Sniper Shot by qubodup)  CC0
+awp_b.mp3  <- freesound.org/s/514228/  (Freesound - Sniper Rifle by SuperPhat)  CC0
+bolt.mp3  <- freesound.org/s/370345/  (Freesound - Mosin Nagant Bolt Action Cycle by Zott820)  CC0
+ak_reload_seq.mp3  <- freesound.org/s/674742/  (Freesound - AK-47 Assault Rifle being unloaded and reloaded by serøutōnin--deprivəd)  CC0
+explosion_a.mp3  <- freesound.org/s/482993/  (Freesound - large explosion 1 by V-ktor)  CC0
+explosion_b.mp3  <- freesound.org/s/366091/  (Freesound - Huge Explosion Part 1 - Shockwave by bevibeldesign)  CC0
+steps_concrete.mp3  <- freesound.org/s/459964/  (Freesound - Footsteps on concrete by florianreichelt)  CC0
+steps_stone.mp3  <- freesound.org/s/813622/  (Freesound - Footsteps - Stone, Rock, Concrete, Cement by SecureSubset)  CC0
+steps_dirt.mp3  <- freesound.org/s/813621/  (Freesound - Footsteps - Dirt, Grass, Ground, Nature by SecureSubset)  CC0
+steps_dirtgravel.mp3  <- freesound.org/s/352870/  (Freesound - Footsteps Dirt Gravel by PotatokingXII)  CC0
+steps_gravel.mp3  <- freesound.org/s/521588/  (Freesound - Hiking Boot Footsteps on Gravel by Fission9)  CC0
+impact_ground.mp3  <- freesound.org/s/789388/  (Freesound - Bullet impact ground (subsonic) SFX by modusmogulus)  CC0
+impacts_misc.mp3  <- freesound.org/s/144444/  (Freesound - bullet impacts by pushkin)  CC0
+impacts_flesh.mp3  <- freesound.org/s/423301/  (Freesound - VisceralBulletImpacts.wav by u1769092)  CC0
+headshot_a.mp3  <- freesound.org/s/660769/  (Freesound - Headshot sound by MadPanCake)  CC0
+headshot_b.mp3  <- freesound.org/s/511194/  (Freesound - Headshot.wav by Pablobd)  CC0
+flyby.mp3  <- freesound.org/s/855248/  (Freesound - Real Bullet Flyby Sound by qubodup)  CC0
+ricochet.mp3  <- freesound.org/s/30932/  (Freesound - bullet ricochet.wav by aust_paul)  CC0
+brass.mp3  <- freesound.org/s/210102/  (Freesound - Brass bullet shell casing drop onto concrete, multiple takes by GrayJoy)  CC0
+knife_whoosh.mp3  <- freesound.org/s/389690/  (Freesound - Small Knife Whoosh.wav by Shamewap)  CC0
+knife_steel.mp3  <- freesound.org/s/259547/  (Freesound - Knife jab to steel.wav by nicktermer)  CC0
+knife_flesh.mp3  <- freesound.org/s/635049/  (Freesound - Flesh Stabs and Slashes 2 by sillygrizzlies)  CC0
+distant_a.mp3  <- freesound.org/s/384717/  (Freesound - Distant Gunshot 1.wav by morganpurkis)  CC0
+distant_b.mp3  <- freesound.org/s/384715/  (Freesound - Distant Gunshot 3.wav by morganpurkis)  CC0
+grunts.mp3  <- freesound.org/s/547209/  (Freesound - Voice_AdultMale_PainGrunts_09.wav by MrFossy)  CC0
+agony.mp3  <- freesound.org/s/166943/  (Freesound - Moans and screams of agony of military soldiers.flac by qubodup)  CC0
+bodyfall.mp3  <- freesound.org/s/504626/  (Freesound - BODY FALL - V HVY - DIRT by leonelmail)  CC0
+wind_a.mp3  <- freesound.org/s/402710/  (Freesound - Desert wind stereo by KasDonatov)  CC0
+wind_b.mp3  <- freesound.org/s/697217/  (Freesound - Looping Gentle Wind Ambience on an Open Desert Plain.wav by dhallcomposer)  CC0
+keypad.mp3  <- freesound.org/s/840450/  (Freesound - Keypad by Ultra-Edward)  CC0
+ak_a.mp3  <- freesound.org/s/404560/  (Freesound - AssaultRifle3.wav by SuperPhat)  CC0
+dog_distant.mp3  <- freesound.org/s/813116/  (Freesound - Distant Dog Bark by qubodup)  CC0
+crow.mp3  <- freesound.org/s/813115/  (Freesound - Crow Caw by qubodup)  CC0
+city_distant.mp3  <- freesound.org/s/631479/  (Freesound - AMB CITY DAWN DISTANT TRAFFIC BIRDS by tferrino)  CC0

@@ -1,0 +1,134 @@
+@font-face { font-family: "Barlow Semi Condensed"; font-weight: 500; src: url(/fonts/barlowsc-500.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Barlow Semi Condensed"; font-weight: 600; src: url(/fonts/barlowsc-600.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Barlow Semi Condensed"; font-weight: 700; src: url(/fonts/barlowsc-700.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Barlow Semi Condensed"; font-weight: 800; src: url(/fonts/barlowsc-800.woff2) format("woff2"); font-display: swap; }
+
+* { box-sizing: border-box; border-radius: 0; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #000; font-family: "Barlow Semi Condensed", Bahnschrift, "Segoe UI", Roboto, Arial, sans-serif; }
+#game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+#hud { position: fixed; inset: 0; pointer-events: none; }
+
+/* ======================= AWP scope =======================
+   CS2: the lens is a circle the full height of the frame (~56 % of a 16:9 frame is black), hard edge, thin dark ring,
+   a faint cool glass tint and a thin black cross with mil hashes. The mask is pure CSS (vh units), so the camera FOV /
+   zoom level never changes it. */
+#scope { position: fixed; inset: 0; pointer-events: none; z-index: 5;
+  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0, rgba(0,0,0,0) calc(50vh - 2px), #000 calc(50vh - 0.5px)); }
+#scope.hidden { display: none; }
+#scope .lens { position: absolute; left: 50%; top: 50%; width: 100vh; height: 100vh; margin: -50vh 0 0 -50vh; border-radius: 50%;
+  border: 2px solid rgba(8,10,12,0.95);
+  background: radial-gradient(circle at 50% 50%, rgba(140,175,205,0.045) 0, rgba(110,145,180,0.07) 62%, rgba(60,85,115,0.16) 92%, rgba(0,0,0,0.55) 100%);
+  /* inner ring + a slight red / blue fringe at the glass edge */
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.6), inset 1.5px 0 0 rgba(255,70,50,0.28), inset -1.5px 0 0 rgba(70,120,255,0.3), inset 0 0 26px rgba(0,0,0,0.35); }
+#scope .ret { position: absolute; left: 50%; top: 50%; width: 100vh; height: 100vh; margin: -50vh 0 0 -50vh; display: block; }
+#scope::before, #scope::after { content: ""; position: absolute; background: #000; }
+#scope::before { left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -0.75px; }
+#scope::after { top: 0; bottom: 0; left: 50%; width: 1.5px; margin-left: -0.75px; }
+
+/* ======================= start overlay =======================
+   The live render dimmed behind one line of text; the whole frame is the (unstyled) start button. */
+#overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); color: #e8e6df; z-index: 10; font-family: inherit; }
+#overlay.hidden { display: none; }
+#overlay button { position: absolute; inset: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  font: inherit; color: inherit; background: transparent; border: 0; padding: 0; margin: 0; cursor: pointer; text-shadow: 0 1px 1px rgba(0,0,0,0.9), 0 0 6px rgba(0,0,0,0.6); }
+#overlay button:disabled { cursor: default; }
+#overlay .map { font-size: 13px; font-weight: 600; letter-spacing: 4px; color: rgba(232,230,223,0.7); text-transform: uppercase; }
+#overlay .map span { color: #e9b84c; }
+#overlay .cta { font-size: 46px; font-weight: 700; letter-spacing: 9px; line-height: 1; color: #f0eee8; }
+#overlay button:disabled .cta { color: rgba(240,238,232,0.45); }
+#overlay .hint { margin: 4px 0 0; color: rgba(232,230,223,0.62); font-size: 13px; font-weight: 500; letter-spacing: 1px; }
+#loading { position: absolute; left: 0; right: 0; bottom: 6vh; margin: 0; text-align: center; color: rgba(232,230,223,0.5); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; pointer-events: none; text-shadow: 0 1px 1px rgba(0,0,0,0.9); }
+
+/* =========================== HUD =========================== */
+#hud .hidden { display: none !important; }
+#hud { color: #e6e6e6; font-family: "Barlow Semi Condensed", Bahnschrift, "Segoe UI", Roboto, Arial, sans-serif; font-weight: 600; font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.7); --ct: #8fb8f0; --t: #e9b84c; --strip: rgba(8,8,8,0.62); }
+#hud .ct { color: var(--ct); } #hud .t { color: var(--t); }
+
+/* radar (top-left): square, no frame */
+#radar { position: absolute; left: 16px; top: 16px; width: 210px; height: 210px; }
+
+/* top centre: one flat strip — 5 alive ticks | CT score | clock | T score | 5 alive ticks */
+#top { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; height: 34px; padding: 0 12px; background: var(--strip); }
+#top .team { display: flex; align-items: center; gap: 12px; }
+#top .team .n { font-size: 26px; font-weight: 700; line-height: 1; min-width: 32px; text-align: center; }
+#top .team.ct .n { color: var(--ct); } #top .team.t .n { color: var(--t); }
+#top .ticks { display: flex; gap: 4px; }
+#top .ticks i { width: 5px; height: 12px; background: #e2e2e2; display: block; }
+#top .team.ct .ticks i { background: #b9d1f2; } #top .team.t .ticks i { background: #e8cd8a; }
+#top .ticks i.x { background: rgba(255,255,255,0.14) !important; }
+#top .ticks i.e { background: rgba(255,255,255,0.05) !important; }
+/* T side: own team on the left (CS2 lists your team first) -- the strip and each team block mirror */
+#top.tside, #top.tside .team { flex-direction: row-reverse; }
+#clock { display: flex; align-items: center; justify-content: center; min-width: 74px; height: 34px; margin: 0 14px; padding: 0 12px; border-left: 1px solid rgba(255,255,255,0.09); border-right: 1px solid rgba(255,255,255,0.09); font-size: 24px; font-weight: 700; letter-spacing: 0.5px; color: #f2f2f2; }
+#timer.low { color: #e04b4b; }
+#c4icon { height: 18px; width: auto; filter: drop-shadow(0 0 0 transparent); transition: filter 0.08s; }
+#c4icon.on { filter: sepia(1) saturate(9) hue-rotate(-30deg) brightness(0.95) drop-shadow(0 0 8px #d93b3b); }
+#alert { position: absolute; top: 54px; left: 50%; transform: translateX(-50%); font-size: 15px; font-weight: 600; color: #f0f0f0; white-space: nowrap; letter-spacing: 0.3px; }
+
+/* killfeed (top-right): bare text rows; the player's own kills get a faint desaturated red wash */
+#killfeed { position: absolute; top: 16px; right: 16px; display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
+.kf { display: flex; align-items: center; gap: 7px; height: 24px; padding: 0 8px; font-size: 14px; font-weight: 700; }
+.kf.mine { background: rgba(70,28,28,0.28); }
+.kf .w { width: 38px; height: 17px; display: block; object-fit: contain; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.9)); }
+.kf .wtxt { color: #d8d4c8; font-weight: 500; font-size: 11px; letter-spacing: 1px; }
+.kf .hs { width: 14px; height: 14px; display: block; background: #f0f0f0; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.9)); -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a8 8 0 0 0-8 8c0 3 1.5 5 3 6v3a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3c1.5-1 3-3 3-6a8 8 0 0 0-8-8zm-3.5 9a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zm7 0a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 17l-1.2-2h2.4z'/></svg>") center / contain no-repeat; mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a8 8 0 0 0-8 8c0 3 1.5 5 3 6v3a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3c1.5-1 3-3 3-6a8 8 0 0 0-8-8zm-3.5 9a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zm7 0a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 17l-1.2-2h2.4z'/></svg>") center / contain no-repeat; }
+
+/* crosshair: Valorant-code canvas (Crosshair.js sizes it in whole device pixels and centres it via margin) */
+#crosshair { position: absolute; left: 50%; top: 50%; display: block; image-rendering: pixelated; }
+
+/* damage direction: thin red arc segments around the centre pointing at the shooter */
+#dmg .wedge { --a: 0deg; position: absolute; left: 50%; top: 50%; width: 30vh; height: 30vh; margin: -15vh 0 0 -15vh; border-radius: 50%; opacity: 0; pointer-events: none;
+  background: conic-gradient(from calc(var(--a) - 30deg), rgba(205,35,35,0) 0deg, rgba(205,35,35,0.6) 12deg 48deg, rgba(205,35,35,0) 60deg 360deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 calc(15vh - 26px), #000 calc(15vh - 22px) calc(15vh - 10px), transparent calc(15vh - 6px));
+  mask: radial-gradient(circle, transparent 0 calc(15vh - 26px), #000 calc(15vh - 22px) calc(15vh - 10px), transparent calc(15vh - 6px)); }
+#hitflash { position: absolute; inset: 0; background: rgba(180,0,0,0.12); opacity: 0; pointer-events: none; }
+#lowhp { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s; background: radial-gradient(ellipse at center, rgba(120,0,0,0) 45%, rgba(140,0,0,0.75) 100%); }
+
+/* vitals (bottom-left): health, armor — icon + number, no bars, no panel */
+#vitals { position: absolute; left: 20px; bottom: 20px; display: flex; gap: 34px; align-items: center; height: 34px; }
+#vitals .stat { display: flex; align-items: center; gap: 9px; }
+#vitals .ico { font-size: 26px; font-weight: 700; color: #e4e4e4; width: 20px; text-align: center; line-height: 1; }
+#vitals .ico.shield { width: 17px; height: 20px; background: #e4e4e4; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.9)); -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z'/></svg>") center / contain no-repeat; mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z'/></svg>") center / contain no-repeat; }
+#vitals .stat span:not(.ico) { font-size: 30px; font-weight: 700; min-width: 44px; line-height: 1; }
+#vitals.low .hp span:not(.ico) { color: #e04b4b; }
+
+/* ammo (bottom-right): big mag, small reserve, weapon glyph — no panel */
+#ammo { position: absolute; right: 20px; bottom: 16px; display: flex; align-items: center; justify-content: flex-end; gap: 18px; height: 50px; }
+#ammo .row { display: flex; align-items: baseline; gap: 5px; }
+#mag { font-size: 42px; font-weight: 700; line-height: 1; }
+#mag.low { color: #e04b4b; }
+#ammo .sep { color: #9a9a9a; font-size: 18px; }
+#reserve { font-size: 18px; color: #d4d4d4; min-width: 28px; text-align: left; }
+#wicon { width: 100px; height: auto; max-height: 44px; display: block; object-fit: contain; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.9)); }
+#c4carry { height: 30px; width: auto; display: block; margin-right: 8px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.9)); }   /* carrying the C4 (T side / cheats.bomb) */
+
+/* bomb: zone prompt (site letter + "hold E"), shared plant/defuse bar, objective line at the bottom centre */
+#bombhint { position: absolute; left: 50%; top: 58%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 8px 18px 9px; background: var(--strip); white-space: nowrap; }
+#bombhint .site { font-size: 12px; letter-spacing: 3px; color: #cfcfcf; font-weight: 600; }
+#bombhint .site b { color: var(--t); font-weight: 800; }
+#bombhint .act { display: flex; align-items: center; gap: 7px; font-size: 17px; letter-spacing: 1.5px; font-weight: 700; color: #f4f4f4; }
+#bombhint kbd { font: inherit; font-size: 14px; font-weight: 800; line-height: 1; padding: 3px 7px 2px; border: 1px solid rgba(255,255,255,0.6); color: #f2b632; background: rgba(0,0,0,0.55); text-shadow: none; }
+#objective { position: absolute; left: 50%; bottom: 84px; transform: translateX(-50%); padding: 5px 14px; background: var(--strip); font-size: 14px; letter-spacing: 2.5px; font-weight: 600; color: #ececec; white-space: nowrap; }
+#objective b { color: var(--t); font-weight: 800; }
+#defuse { position: absolute; left: 50%; top: 58%; transform: translateX(-50%); width: 260px; }
+#defuse .lbl { font-size: 13px; letter-spacing: 2px; text-align: center; margin-bottom: 6px; font-weight: 700; }
+#defuse .bar { height: 6px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.18); }
+#defuseFill { height: 100%; width: 0%; background: #bcd8ff; }
+
+/* flash / death-cam line / win announcement: flat centred text, no boxes */
+#flash { position: absolute; inset: 0; pointer-events: none; }
+#deathpanel { position: absolute; left: 50%; top: 84px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+#deathpanel .lbl { font-size: 13px; letter-spacing: 2.5px; color: #c8c8c8; font-weight: 600; }
+#deathpanel .name { font-size: 17px; font-weight: 700; color: var(--t); letter-spacing: 0.5px; }
+#deathpanel .name.ct { color: var(--ct); }
+#deathpanel .hp { font-size: 14px; font-weight: 600; color: #e4e4e4; margin-left: 4px; }
+#deathpanel img { height: 18px; width: auto; max-width: 56px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.9)); }
+#endcard { position: absolute; left: 0; right: 0; top: 128px; text-align: center; pointer-events: none; }
+#endcard .who { font-size: 44px; letter-spacing: 5px; font-weight: 700; line-height: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.95), 0 0 14px rgba(0,0,0,0.7); }
+#endcard .who.ct { color: var(--ct); } #endcard .who.t { color: var(--t); }
+#endcard .why { margin-top: 8px; font-size: 15px; color: #dcdcdc; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; }
+#endcard .mvp { margin-top: 18px; display: flex; justify-content: center; align-items: center; gap: 7px; font-size: 14px; font-weight: 500; color: #d0d0d0; }
+#endcard .mvp:empty { display: none; }
+#endcard .mvp .star { color: #f2c14e; } #endcard .mvp .sep { color: #888; }
+#endcard .mvp .t, #endcard .mvp .ct { font-weight: 700; }
