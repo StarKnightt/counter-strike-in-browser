@@ -75,6 +75,13 @@ and `tools/fetch_textures.py` uses the public Poly Haven API.
 
 After the result card, a click starts the next round.
 
+![The AWP from hip, halfway down long, looking at the doors](docs/screenshot-awp.jpg)
+
+The AWP scopes in two steps on right click and back out on the third; a shot
+unscopes for the bolt and re-scopes to the level you had.
+
+![Through the AWP at the second zoom: a T rounding long corner](docs/screenshot-awp-scoped.jpg)
+
 ## URL parameters
 
 | Parameter | Does |
