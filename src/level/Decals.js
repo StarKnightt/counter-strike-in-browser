@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { asset } from '../core/Constants.js';
 
 /**
  * Static wall decals authored in Blender as DECAL_* empties (local +X = wall normal, userData: kind/w/h/cell/alpha).
@@ -33,7 +34,7 @@ export class Decals {
 
   async load(markers) {
     if (!markers?.length) return this;
-    const [grime, graffiti, postersImg] = await Promise.all(['grime', 'graffiti', 'posters'].map((n) => loadImage(`/textures/decals/${n}.png`)));
+    const [grime, graffiti, postersImg] = await Promise.all(['grime', 'graffiti', 'posters'].map((n) => loadImage(asset(`textures/decals/${n}.png`))));
     const tex = (src) => { const t = new THREE.CanvasTexture(src); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; return t; };
     const grimeC = document.createElement('canvas'); grimeC.width = grime.width; grimeC.height = grime.height; grimeC.getContext('2d').drawImage(grime, 0, 0);
     const T = { grime: tex(grimeC), graffiti: tex(keyWhite(graffiti)), posters: tex(keyWhite(postersImg)) };

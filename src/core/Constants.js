@@ -1,5 +1,10 @@
+// Public-dir asset URL. Vite's `base` is '/' in dev and '/counter-strike-in-browser/' for GitHub Pages (vite.config.js),
+// so every runtime-fetched file (models, audio, decal textures) must go through here instead of a hard-coded '/models/...'.
+export const BASE_URL = import.meta.env.BASE_URL;
+export const asset = (path) => BASE_URL + path.replace(/^\/+/, '');
+
 export const ASSETS = {
-  MAP: '/models/dust2_a.webp.glb',
+  MAP: asset('models/dust2_a.webp.glb'),
 };
 
 export const RENDER = {

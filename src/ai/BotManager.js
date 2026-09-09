@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { assignDepthMaterials } from '../level/ShadowDepth.js';
 import { bus, Events } from '../core/EventBus.js';
+import { asset } from '../core/Constants.js';
 import { state, nameOf } from '../core/GameState.js';
 import { NavGraph } from './NavGraph.js';
 import { Bot, RIG } from './Bot.js';
@@ -126,12 +127,12 @@ export class BotManager {
   async load() {
     const loader = new GLTFLoader();
     for (const v of new Set(VARIANTS)) {
-      const g = await loader.loadAsync(`/models/bot_${v}.glb`);
+      const g = await loader.loadAsync(asset(`models/bot_${v}.glb`));
       g.scene.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
       g.scene.userData.clips = g.animations;                                       // skinned rig: clips travel with the template
       this.templates[v] = g.scene;
     }
-    const ak = await loader.loadAsync('/models/ak47.glb');                          // bot rifle = first-person AK without the hands/arms
+    const ak = await loader.loadAsync(asset('models/ak47.glb'));                        // bot rifle = first-person AK without the hands/arms
     for (const n of ['HandR', 'ArmR', 'HandL', 'ArmL']) ak.scene.getObjectByName(n)?.removeFromParent();
     dressWorldGun(ak.scene);
     this.rifle = ak.scene;

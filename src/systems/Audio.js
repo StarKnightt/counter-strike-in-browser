@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { asset } from '../core/Constants.js';
 
 /**
  * Web Audio engine: buffer bank (CC0 one-shots in /audio, see public/audio/CREDITS.txt; voice lines in /audio/voice
@@ -66,7 +67,7 @@ export class Audio {
     let done = 0;
     await Promise.all(list.map(async ([id, f]) => {
       try {
-        const res = await fetch(`/audio/${f}.ogg`);
+        const res = await fetch(asset(`audio/${f}.ogg`));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const dec = this.ctx || (this._decoder ??= new OfflineAudioContext(1, 1, 48000));
         const buf = await dec.decodeAudioData(await res.arrayBuffer());

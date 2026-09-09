@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { bus, Events } from '../core/EventBus.js';
+import { asset } from '../core/Constants.js';
 import { state } from '../core/GameState.js';
 
 const BOMB_TIME = 40;          // CS2 default mp_c4timer
@@ -39,7 +40,7 @@ export class Bomb {
   }
 
   async load() {
-    const g = await new GLTFLoader().loadAsync('/models/c4.glb');
+    const g = await new GLTFLoader().loadAsync(asset('models/c4.glb'));
     this.model = g.scene; this.model.visible = false;
     this.model.traverse((o) => {
       if (!o.isMesh) return;

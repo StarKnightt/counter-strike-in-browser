@@ -4,6 +4,7 @@
  * inaccuracy values are tangents of the maximum bullet deviation (a unit-disk radius; the bullet lands uniformly-in-radius
  * inside it, so the *typical* miss is about half the max), e.g. AK stand 0.00641 => atan => 0.37° max, ~0.18° typical.
  */
+import { asset } from '../core/Constants.js';
 
 // AK-47 spray pattern: cumulative aim-punch offset in degrees for shot i (x right+, y up+). Shot 1 flies true.
 // Shape: the first 3 rounds stay near-straight (shot 3 lands 0.7° / ~25 cm at 20 m above shot 1), then a steep climb
@@ -20,7 +21,7 @@ function akPattern() {
 
 export const WEAPONS = {
   ak47: {
-    name: 'AK-47', slot: 1, model: '/models/ak47.glb',
+    name: 'AK-47', slot: 1, model: asset('models/ak47.glb'),
     mag: 30, reserve: 90, rpm: 600, damage: 36, armorPen: 0.775, headshotMult: 4.0, rangeMod: 0.98, penetration: 2,
     reloadTime: 2.43, drawTime: 1.0, auto: true,
     // CS2 vdata (tangent units). recover*: accuracy-penalty time constants, blending from the initial to the final value over
@@ -48,7 +49,7 @@ export const WEAPONS = {
     speed: 4.10, tag: [0.4, 0.55], killIcon: 'ak47',
   },
   awp: {
-    name: 'AWP', slot: 1, model: '/models/awp.glb',
+    name: 'AWP', slot: 1, model: asset('models/awp.glb'),
     mag: 10, reserve: 30, rpm: 41.24, damage: 115, armorPen: 0.975, headshotMult: 4.0, rangeMod: 0.99, penetration: 2,
     reloadTime: 3.7, drawTime: 1.25, auto: false, boltTime: 1.2, scoped: true,
     // Scope FOVs: CS2 "40 / 10" are 4:3-horizontal figures like its "fov 90" (= RENDER.FOV 74 vertical); converted the same way:
@@ -64,7 +65,7 @@ export const WEAPONS = {
     speed: 3.81, tag: [0.35, 0.4], killIcon: 'awp',
   },
   knife: {
-    name: 'Knife', slot: 3, model: '/models/knife.glb',
+    name: 'Knife', slot: 3, model: asset('models/knife.glb'),
     melee: true, drawTime: 1.0,
     // CS2: light slash 40 (90 from behind), heavy stab 65 (180 from behind), reach 48u
     primary: { time: 0.4, damage: 40, backstab: 90, range: 0.91 }, secondary: { time: 1.0, damage: 65, backstab: 180, range: 0.91 },
