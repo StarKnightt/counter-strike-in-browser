@@ -1,5 +1,7 @@
 # Counter-Strike in your browser
 
+**Play: https://starknightt.github.io/counter-strike-in-browser/** (desktop browser, click to lock the mouse; deployed from `main` by GitHub Actions)
+
 A single-player, CS2-style round on a Dust II A-site, running in the browser. Three.js r185 + three-mesh-bvh, no framework. The map, weapons, gloved hands, C4 and the bots' bodies were all built procedurally by Python scripts running in Blender (driven through the Blender MCP add-on, later in background mode) and exported to GLB. You spawn CT (sides alternate every round), five T bots push long and short, peek, take cover, plant; you hold the site with an AK-47, an AWP and a knife, or defuse. HUD, radar, killfeed, Valorant-code crosshair, Web Audio engine with occlusion, GTAO / bloom / sun shafts / custom stable PCF shadows, 60 fps on an RTX 4060 at 1080p. No Valve assets.
 
 <!-- screenshot: replace with a real frame, e.g. ![A site from ramp](docs/shot.jpg) -->
