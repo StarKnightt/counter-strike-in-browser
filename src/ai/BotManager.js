@@ -10,8 +10,9 @@ import { Bot, RIG } from './Bot.js';
 import { makeFlashTexture } from '../gameplay/ViewModel.js';
 import { weaponTextureSets } from '../gameplay/WeaponTextures.js';
 import { applyCloth } from './Cloth.js';
+import { BRAND } from '../brand.js';
 
-const NAMES = ['Cliffe', 'Ryan', 'Chet', 'Wolf', 'Vitaliy'];
+const NAMES = BRAND.botNames;
 const VARIANTS = ['mask', 'wrap', 'mask_cap', 'wrap_goggles', 'mask'];
 const LINES = {
   spot: ['Enemy spotted.', 'Enemy spotted.', 'Contact!'],

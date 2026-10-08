@@ -8,7 +8,7 @@
     "build": "vite build",
     "build:pages": "vite build --base /counter-strike-in-browser/",
     "preview": "vite preview --port 5189",
-    "build:wavedash": "vite build --base ./ --outDir dist-wavedash"
+    "build:wavedash": "vite build --mode wavedash --base ./ --outDir dist-wavedash"
   },
   "keywords": [],
   "author": "",

@@ -1,5 +1,6 @@
 import { Game } from './core/Game.js';
 import { wavedash, wireWavedash } from './wavedash.js';
+import { BRAND } from './brand.js';
 
 const canvas = document.getElementById('game');
 const overlay = document.getElementById('overlay');
@@ -9,6 +10,10 @@ const loading = document.getElementById('loading');
 startBtn.disabled = true;
 const game = new Game(canvas);
 window.__game = game; // debug / screenshot hooks
+if (BRAND.title) {
+  document.title = BRAND.title;
+  startBtn.querySelector('.map').innerHTML = BRAND.mapLine;
+}
 
 wireWavedash();
 wavedash.ready();

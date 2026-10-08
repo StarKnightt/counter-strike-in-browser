@@ -1,6 +1,7 @@
 import { bus, Events } from '../core/EventBus.js';
 import { state, resetRound } from '../core/GameState.js';
 import { Cheats } from './Cheats.js';
+import { BRAND } from '../brand.js';
 
 const ROUND_TIME = 115;       // 1:55
 const FREEZE_TIME = 3;        // short freeze so the player can orient (bots are staggered anyway)
@@ -43,11 +44,11 @@ export class Round {
       if (state.side === 't') {
         // the planter's death drops the C4 where he fell (T bots -- cheats.bomb() in CT mode -- fetch it; alone as T the round is over)
         if (state.player.hasBomb) game.bomb.drop(game.player.position);
-        if (state.phase !== 'planted') this._end('CT', 'Terrorists eliminated');   // planted: the round runs on to detonation / defuse
+        if (state.phase !== 'planted') this._end('CT', BRAND.tEliminated);   // planted: the round runs on to detonation / defuse
         return;
       }
       if (state.player.hasBomb) { game.bomb.drop(game.player.position); }
-      this._end('T', 'Counter-Terrorists eliminated');
+      this._end('T', BRAND.ctEliminated);
     });
     bus.on(Events.BOMB_DEFUSED, () => this._end('CT', 'Bomb defused'));
     bus.on(Events.BOMB_EXPLODED, () => this._end('T', 'Target bombed'));
@@ -127,11 +128,11 @@ export class Round {
     if (state.phase === 'live') {
       state.roundTime = Math.max(0, state.roundTime - dt);
       if (state.roundTime <= 0) { this._end('CT', 'Time ran out'); return; }
-      if (botsDead) { this._end(state.side === 't' ? 'T' : 'CT', state.side === 't' ? 'Counter-Terrorists eliminated' : 'Terrorists eliminated'); return; }
+      if (botsDead) { this._end(state.side === 't' ? 'T' : 'CT', state.side === 't' ? BRAND.ctEliminated : BRAND.tEliminated); return; }
     }
     // 'planted': the bomb owns the clock; only the bomb events (or the player's death) can end it -- except on T side, where
     // the last CT dying leaves nobody to defuse: the round ends at once (CS rule)
-    if (state.phase === 'planted' && state.side === 't' && botsDead) this._end('T', 'Counter-Terrorists eliminated');
+    if (state.phase === 'planted' && state.side === 't' && botsDead) this._end('T', BRAND.ctEliminated);
   }
 
   _end(winner, reason) {
@@ -157,16 +158,16 @@ export class Round {
         const txt = reason === 'Target bombed' ? 'for planting the bomb' : `for eliminating ${k} enem${k === 1 ? 'y' : 'ies'}`;
         return { name: state.playerName, team: 't', text: txt };
       }
-      if (reason === 'Bomb defused') return { name: state.bomb.defuser || g.bots.alive[0]?.name || 'Counter-Terrorist', team: 'ct', text: 'for defusing the bomb' };
-      if (reason === 'Time ran out') return { name: g.bots.alive[0]?.name || 'Counter-Terrorist', team: 'ct', text: 'for holding the site' };
-      return { name: this.lastAttacker || g.bots.alive[0]?.name || 'Counter-Terrorist', team: 'ct', text: 'for eliminating 1 enemy' };
+      if (reason === 'Bomb defused') return { name: state.bomb.defuser || g.bots.alive[0]?.name || BRAND.ct, team: 'ct', text: 'for defusing the bomb' };
+      if (reason === 'Time ran out') return { name: g.bots.alive[0]?.name || BRAND.ct, team: 'ct', text: 'for holding the site' };
+      return { name: this.lastAttacker || g.bots.alive[0]?.name || BRAND.ct, team: 'ct', text: 'for eliminating 1 enemy' };
     }
     if (winner === 'CT') {
       const txt = reason === 'Bomb defused' ? 'for defusing the bomb' : `for eliminating ${k} enem${k === 1 ? 'y' : 'ies'}`;
       return { name: state.playerName, team: 'ct', text: txt };
     }
-    if (reason === 'Target bombed') { const p = g.bots.bots.find((b) => b.planted) || g.bots.bots.find((b) => !b.hasBomb); return { name: p?.name || 'Terrorist', team: 't', text: 'for planting the bomb' }; }
-    const killer = this.lastAttacker || g.bots.alive[0]?.name || 'Terrorist';
+    if (reason === 'Target bombed') { const p = g.bots.bots.find((b) => b.planted) || g.bots.bots.find((b) => !b.hasBomb); return { name: p?.name || BRAND.t, team: 't', text: 'for planting the bomb' }; }
+    const killer = this.lastAttacker || g.bots.alive[0]?.name || BRAND.t;
     return { name: killer, team: 't', text: 'for eliminating 1 enemy' };
   }
 

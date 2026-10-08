@@ -1,3 +1,4 @@
+import { BRAND } from '../brand.js';
 /** Single source of truth for round/gameplay state shared by systems + HUD. */
 export const state = {
   phase: 'loading',       // loading | freeze | live | planted | over
@@ -13,7 +14,7 @@ export const state = {
   bomb: { state: 'carried', carrier: null, position: null, plantProgress: 0 },   // state: carried | dropped | planted | defused | exploded; carrier: bot name | 'player' | null
   score: { ct: 0, t: 0 },  // round wins (persist across restarts)
   round: 1,
-  playerName: 'prase',
+  playerName: BRAND.playerName,
   mvp: null,              // { name, text } filled at round end
 };
 

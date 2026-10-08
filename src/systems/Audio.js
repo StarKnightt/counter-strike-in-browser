@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { asset } from '../core/Constants.js';
+import { BRAND } from '../brand.js';
 
 /**
  * Web Audio engine: buffer bank (CC0 one-shots in /audio, see public/audio/CREDITS.txt; voice lines in /audio/voice
@@ -63,7 +64,7 @@ export class Audio {
 
   async load(onProgress) {
     const list = Object.entries(BANK).flatMap(([id, v]) => files(id, v).map((f) => [id, f]))
-      .concat(Object.entries(VOICE).flatMap(([id, v]) => files(id, v).map((f) => [id, `voice/${f}`])));
+      .concat(Object.entries(VOICE).flatMap(([id, v]) => files(id, v).map((f) => [id, `${id.startsWith('ann_') ? BRAND.announcerDir : 'voice'}/${f}`])));
     let done = 0;
     await Promise.all(list.map(async ([id, f]) => {
       try {

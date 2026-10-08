@@ -44,11 +44,14 @@ export const wavedash = {
   },
 };
 
-const WINS_KEY = 'cs2-dust2.roundsWon';
+const WINS_KEY = 'sitehold.roundsWon';
 
 /** Round results -> leaderboard and achievements. */
 export function wireWavedash() {
   if (!sdk()) return;
+  bus.on(Events.ROUND_START, () => {
+    try { const u = sdk().getUser(); if (u?.username) state.playerName = u.username; } catch {}
+  });
   bus.on(Events.KILL, ({ killer, headshot }) => {
     if (killer !== 'player') return;
     wavedash.achieve('FIRST_KILL');

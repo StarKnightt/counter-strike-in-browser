@@ -3,6 +3,7 @@ import { state, nameOf } from '../core/GameState.js';
 import { Radar } from './Radar.js';
 import { Crosshair } from './Crosshair.js';
 import { renderWeaponIcons } from './WeaponIcons.js';
+import { BRAND } from '../brand.js';
 
 const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
@@ -62,8 +63,8 @@ export class HUD {
     if (this.icons.c4) { this.el.c4icon.src = this.icons.c4; this.el.c4carry.src = this.icons.c4; }
 
     bus.on(Events.BOMB_EXPLODED, (e) => { if (this.noFlash) return; this.flashA = 0.35 + 0.65 * e.k; this.flashCol = e.k > 0.6 ? '255,236,200' : '255,200,140'; });
-    bus.on(Events.BOMB_PLANTED, () => this._alert('The bomb has been planted.'));
-    bus.on(Events.BOMB_DEFUSED, () => this._alert('The bomb has been defused.'));
+    bus.on(Events.BOMB_PLANTED, () => this._alert(BRAND.planted));
+    bus.on(Events.BOMB_DEFUSED, () => this._alert(BRAND.defused));
     bus.on(Events.ROUND_END, (e) => { this.endPending = { e, t: e.playerAlive ? 0.6 : 1.9 }; });
     bus.on(Events.ROUND_START, () => this._reset());
     // killer/victim may arrive as labels ('player', 'C4'), bot names or (from test harnesses) whole Bot/Player objects.
@@ -77,7 +78,7 @@ export class HUD {
       const an = e.attackerName || (e.attacker ? nameOf(e.attacker) : '');
       this._kill(c4 ? '' : an, this.enemy, state.playerName, this.own, e.weapon, e.headshot, true);
       const k = game.bots?.bots.find((b) => b === e.attacker || b.name === an);
-      this.el.dpName.textContent = c4 ? 'The bomb' : (an || (this.enemy === 'ct' ? 'Counter-Terrorist' : 'Terrorist'));
+      this.el.dpName.textContent = c4 ? 'The bomb' : (an || (this.enemy === 'ct' ? BRAND.ct : BRAND.t));
       this.el.dpName.className = 'name ' + this.enemy;
       this.el.dpHp.textContent = c4 ? '' : `${Math.max(1, Math.ceil(k?.hp ?? 100))} HP`;
       if (this.icons[e.weapon]) { this.el.dpIcon.src = this.icons[e.weapon]; this.el.dpIcon.style.display = ''; } else this.el.dpIcon.style.display = 'none';
@@ -127,7 +128,7 @@ export class HUD {
 
   _showEnd(e) {
     const ct = e.winner === 'CT';
-    this.el.endWho.textContent = ct ? 'COUNTER-TERRORISTS WIN' : 'TERRORISTS WIN';
+    this.el.endWho.textContent = ct ? BRAND.ctWin : BRAND.tWin;
     this.el.endWho.className = 'who ' + (ct ? 'ct' : 't');
     this.el.endWhy.textContent = e.reason;
     const m = state.mvp;

@@ -1,6 +1,7 @@
 import { bus, Events } from '../core/EventBus.js';
 import { state } from '../core/GameState.js';
 import { WEAPONS, falloff, applyArmor } from './WeaponDefs.js';
+import { BRAND } from '../brand.js';
 
 export const PART_MULT = { head: 4.0, chest: 1.0, stomach: 1.25, arm: 1.0, leg: 0.75 };
 
@@ -40,7 +41,7 @@ export class Combat {
     if (armored) { const r = applyArmor(amount, armorPen, p.armor); dmg = r.hp; p.armor = Math.max(0, p.armor - r.armorLoss); }
     p.hp = Math.max(0, p.hp - dmg);
     // `attacker` may be a Bot (object) or a label ('C4'); HUD/round text always want the display name
-    const attackerName = typeof attacker === 'string' ? attacker : (attacker?.name ?? 'Terrorist');
+    const attackerName = typeof attacker === 'string' ? attacker : (attacker?.name ?? BRAND.t);
     bus.emit(Events.PLAYER_DAMAGE, { amount: dmg, dir, attacker, attackerName, weapon, part, hp: p.hp });
     const pl = this.game.player;
     // tagging (CS2 m_flFlinchVelocityModifier): a hit caps run speed at 40 % (big hit) / 55 % of max for the weapon that hit
