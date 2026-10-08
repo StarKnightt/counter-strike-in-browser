@@ -1,4 +1,5 @@
 import { Game } from './core/Game.js';
+import { wavedash, wireWavedash } from './wavedash.js';
 
 const canvas = document.getElementById('game');
 const overlay = document.getElementById('overlay');
@@ -9,6 +10,8 @@ startBtn.disabled = true;
 const game = new Game(canvas);
 window.__game = game; // debug / screenshot hooks
 
+wireWavedash();
+wavedash.ready();
 game.init((p) => { loading.textContent = `loading map… ${Math.round(p * 100)}%`; }).then(() => {
   loading.textContent = 'ready';
   startBtn.disabled = false;

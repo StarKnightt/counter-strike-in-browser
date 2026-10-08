@@ -34,3 +34,4 @@ desktop.ini
 *.log
 .idea/
 .vscode/
+dist-wavedash/
