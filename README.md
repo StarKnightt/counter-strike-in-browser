@@ -157,5 +157,3 @@ Pages.
 
 MIT for the code. Third-party assets stay under their own CC0 / OFL terms. See
 [LICENSE](LICENSE).
-
-☕ like it? [buy me a coffee](https://buymeacoffee.com/prasenx) or [sponsor on github](https://github.com/sponsors/StarKnightt)
